@@ -1,0 +1,11 @@
+[package]
+name = "ranch"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# https://www.gnu.org/software/stow/manual/stow.html#Introduction
+[dependencies]
+clap = { version = "4.4.14", features = ["derive"] }
+walkdir = { version = "2.4.0", features = [] }
