@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::env;
 use std::io;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::exit;
 use std::str;
 use walkdir::WalkDir;
@@ -94,12 +94,12 @@ struct Args {
 }
 
 #[cfg(windows)]
-fn soft_link(from: &PathBuf, to: &PathBuf) -> io::Result<()> {
+fn soft_link(from: &Path, to: &Path) -> io::Result<()> {
     std::os::windows::fs::symlink_file(from, to)
 }
 
 #[cfg(unix)]
-fn soft_link(from: &PathBuf, to: &PathBuf) -> io::Result<()> {
+fn soft_link(from: &Path, to: &Path) -> io::Result<()> {
     std::os::unix::fs::symlink(from, to)
 }
 
@@ -162,13 +162,13 @@ fn main() {
 
         let rel_path = rel_path.unwrap();
 
+        let relative_output = rel_path.strip_prefix(&args.package).unwrap();
+        let output_path = target_path.join(relative_output).to_path_buf();
         if args.verbose >= LV_INFO {
-            eprintln!(" -> {}", rel_path.display());
+            eprintln!("{} -> {}", &p.to_path_buf().display(), &output_path.display());
         }
         if !args.dry_run {
-            // TODO: rel_path includes package - remove that. Write softlink.
-            soft_link(&p.to_path_buf(), &target_path.join(rel_path).to_path_buf());
-            println!("{} -> {}", p.display(), target_path.join(rel_path).to_path_buf().display());
+            soft_link(&p.to_path_buf(), &output_path).unwrap();
         }
     }
 }
