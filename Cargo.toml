@@ -9,3 +9,6 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.4.14", features = ["derive"] }
 walkdir = { version = "2.4.0", features = [] }
+
+[dev-dependencies]
+tempdir = { version = "0.3.7", features = [] }
